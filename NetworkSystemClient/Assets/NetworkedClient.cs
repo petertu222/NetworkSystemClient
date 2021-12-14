@@ -129,17 +129,38 @@ public class NetworkedClient : MonoBehaviour
             if (loginResultSiginifer == LoginResponses.Success)
                 gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.MainMenu);
         }
-
+        //else if (signifier == ServerToClientSignifiers.GameSeesionStarted)
+        //{
+        //    Debug.Log("you are id" + id);
+        //    gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.WaitingForTurn);
+        //}
         else if (signifier == ServerToClientSignifiers.GameSeesionStarted)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
-
             Debug.Log("Your turn!");
-
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
+            //gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.WaitingForTurn);
         }
+        else if (signifier == ServerToClientSignifiers.MessageResponse1)
+        {
+            Debug.Log("Hello");
+        }
+        else if (signifier == ServerToClientSignifiers.MessageResponse2)
+        {
+            Debug.Log("Bye");
+        }
+        else if (signifier == ServerToClientSignifiers.MessageResponse3)
+        {
+            Debug.Log("Nice");
+        }
+        else if (signifier == ServerToClientSignifiers.MessageResponse4)
+        {
+            Debug.Log("Oh No");
+        }
+
 
     }
 
@@ -154,21 +175,31 @@ public static class ClientToServerSignifiers
 {
     public const int Login = 1;
     public const int CreateAccount = 2;
-    public const int AddToGameSessionQueue= 3;
+    public const int AddToGameSessionQueue = 3;
     public const int TicTacToePlay = 4;
+    public const int Message1 = 5;
+    public const int Message2 = 6;
+    public const int Message3 = 7;
+    public const int Message4 = 8;
 }
 
 public static class ServerToClientSignifiers
 {
     public const int LoginResponse = 1;
     public const int GameSeesionStarted = 2;
-
     public const int OpponentTicTacToePlay = 3;
+    public const int WaitingForTurn = 4;
+    public const int MessageResponse1 = 5;
+    public const int MessageResponse2 = 6;
+    public const int MessageResponse3 = 7;
+    public const int MessageResponse4 = 8;
+
     //public const int LoginFailure = 2;
 
     //public const int CreateAccountSuccess = 1;
     //public const int CreateAccountFailure = 2;
 }
+
 public static class LoginResponses
 {
     public const int Success = 1;

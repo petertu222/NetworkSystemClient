@@ -13,6 +13,7 @@ public class GameSystemManager : MonoBehaviour
     GameObject gamePanel;
     GameObject tl, tm, tr, ml, mm, mr, bl, bm, br;
     public Sprite[] playerShape;//0=x ,1=o
+    GameObject turnOrder;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,6 +60,8 @@ public class GameSystemManager : MonoBehaviour
                 bm = go;
             else if (go.name == "BR")
                 br = go;
+            else if (go.name == "TurnOrder")
+                turnOrder = go;
         }
 
         buttonSubmit.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
@@ -93,22 +96,22 @@ public class GameSystemManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    ChangeGameState(GameStates.Login);
-        //}
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    ChangeGameState(GameStates.MainMenu);
-        //}
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    ChangeGameState(GameStates.WaitingForMatch);
-        //}
-        //if (Input.GetKeyDown(KeyCode.F))
-        //{
-        //    ChangeGameState(GameStates.PlayingTicTacToe);
-        //}
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Message1 + "");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Message2 + "");
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Message3 + "");
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Message4 + "");
+        }
     }
 
     public void SubmitButtonPressed()
@@ -146,64 +149,72 @@ public class GameSystemManager : MonoBehaviour
     }
     private void TopLeftPressed()
     {
-        //tl.GetComponent<Button>().image.sprite = playerShape[];
-        tl.GetComponent<Button>().interactable = false;
+        //tl.GetComponent<Button>().image.sprite = playerShape[0];
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
     }
 
     private void TopMiddlePressed()
     {
         //tm.GetComponent<Button>().image.sprite = playerShape[];
-        tm.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
     }
 
     private void TopRightPressed()
     {
        // tr.GetComponent<Button>().image.sprite = playerShape[];
-        tr.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
     }
 
     private void MiddleLeftPressed()
     {
         //ml.GetComponent<Button>().image.sprite = playerShape[];
-        ml.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
     }
 
     private void MiddleMiddlePressed()
     {
        // mm.GetComponent<Button>().image.sprite = playerShape[];
-        mm.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
     }
 
     private void MiddleRightPressed()
     {
        // mr.GetComponent<Button>().image.sprite = playerShape[];
-        mr.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
     }
     private void BottomLeftPressed()
     {
        // bl.GetComponent<Button>().image.sprite = playerShape[];
-        bl.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
 
     }
     private void BottomMiddlePressed()
     {
         //bm.GetComponent<Button>().image.sprite = playerShape[];
-        bm.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
-
+        ChangeGameState(5);
     }
     private void BottomRightPressed()
     {
         //br.GetComponent<Button>().image.sprite = playerShape[];
-        br.GetComponent<Button>().interactable = false;
+        
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(5);
 
     }
 
@@ -219,7 +230,7 @@ public class GameSystemManager : MonoBehaviour
         placeHolderGameButton.SetActive(false);
         observeButton.SetActive(false);
         gamePanel.SetActive(false);
-
+        turnOrder.SetActive(false);
         if (newState == GameStates.Login)
         {
             inputFieldUsername.SetActive(false);
@@ -235,6 +246,7 @@ public class GameSystemManager : MonoBehaviour
             findGameSessionButton.SetActive(true);
             observeButton.SetActive(true);
             gamePanel.SetActive(false);
+
         }
         else if (newState == GameStates.WaitingForMatch)
         {
@@ -245,11 +257,43 @@ public class GameSystemManager : MonoBehaviour
             
             //placeHolderGameButton.SetActive(true);
             gamePanel.SetActive(true);
-
+            turnOrder.SetActive(true);
+            turnOrder.GetComponent<Text>().text = "Your Turn";
+            if (tl.GetComponent<Button>().image.sprite == null)
+                tl.GetComponent<Button>().interactable = true;
+            if (tm.GetComponent<Button>().image.sprite == null)
+                tm.GetComponent<Button>().interactable = true;
+            if (tr.GetComponent<Button>().image.sprite == null)
+                tr.GetComponent<Button>().interactable = true;
+            if (ml.GetComponent<Button>().image.sprite == null)
+                ml.GetComponent<Button>().interactable = true;
+            if (mm.GetComponent<Button>().image.sprite == null)
+                mm.GetComponent<Button>().interactable = true;
+            if (mr.GetComponent<Button>().image.sprite == null)
+                mr.GetComponent<Button>().interactable = true;
+            if (bl.GetComponent<Button>().image.sprite == null)
+                bl.GetComponent<Button>().interactable = true;
+            if (bm.GetComponent<Button>().image.sprite == null)
+                bm.GetComponent<Button>().interactable = true;
+            if (br.GetComponent<Button>().image.sprite == null)
+                br.GetComponent<Button>().interactable = true;
         }
         else if (newState == GameStates.WaitingForTurn)
         {
+            //if ()
+            gamePanel.SetActive(true);
+            turnOrder.SetActive(true);
+            turnOrder.GetComponent<Text>().text = "Your Oppenent's Turn";
 
+            tl.GetComponent<Button>().interactable = false;
+            tm.GetComponent<Button>().interactable = false;
+            tr.GetComponent<Button>().interactable = false;
+            ml.GetComponent<Button>().interactable = false;
+            mm.GetComponent<Button>().interactable = false;
+            mr.GetComponent<Button>().interactable = false;
+            bl.GetComponent<Button>().interactable = false;
+            bm.GetComponent<Button>().interactable = false;
+            br.GetComponent<Button>().interactable = false;
         }
     }
 }
